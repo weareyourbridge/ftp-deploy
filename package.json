@@ -1,7 +1,7 @@
 {
   "name": "deploy-action",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "build": "ncc build index.js --license licenses.txt"
