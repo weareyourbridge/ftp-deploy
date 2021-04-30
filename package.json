@@ -1,0 +1,17 @@
+{
+  "name": "deploy-action",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "ncc build index.js --license licenses.txt"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.7",
+    "@actions/github": "^4.0.0",
+    "ssh2-sftp-client": "^6.0.1"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.28.4"
+  }
+}

@@ -1,0 +1,31 @@
+name: "Deploy SFTP"
+description: "Deploy a folder using SFTP"
+inputs:
+  host:
+    description: "FTP host URL like: ftp.host.com or sftp.host.com"
+    required: true
+  port:
+    description: "FTP port"
+    required: false
+    default: 22
+  username:
+    required: true
+    description: "Ftp username"
+  password:
+    required: true
+    description: "Ftp password"
+  remote_folder:
+    required: false
+    description: "The remote folder location of your FTP server"
+    default: ./
+  local_folder:
+    required: false
+    default: dist
+    description: "The local folder location"
+  clean:
+    required: false
+    description: "Cleans the remote folder"
+    default: false
+runs:
+  using: "node15"
+  main: "index.js"
