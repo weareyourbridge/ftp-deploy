@@ -27,5 +27,5 @@ inputs:
     description: "Cleans the remote folder"
     default: false
 runs:
-  using: "node15"
+  using: "node12"
   main: "index.js"
