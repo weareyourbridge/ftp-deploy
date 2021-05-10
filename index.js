@@ -1,5 +1,4 @@
 const core = require("@actions/core");
-const fs = require("fs");
 const SftpClient = require("ssh2-sftp-client");
 
 async function run() {
@@ -24,16 +23,22 @@ async function run() {
       core.info(`Listener: Uploaded ${info.source}`);
     });
 
-    const uploadFolderExists = await client.exists(`${dst}/upload`);
+    const baseFolderExists = await client.exists(dst);
+    const uploadFolderExists = await client.exists(dst + "upload");
+    core.info("Base folder exists: ", baseFolderExists);
+    core.info("Upload folder exists: ", uploadFolderExists);
+
     if (!uploadFolderExists) {
-      await client.mkdir(`${dst}/upload`);
+      await client.mkdir(dst + "upload");
     }
-    await client.uploadDir(src, `${dst}/upload`);
-    const oldVersion = await client.exists(`${dst}/live`);
+
+    core.info("Upload folder is: ", dst + "upload");
+    await client.uploadDir(src, dst + "upload");
+    const oldVersion = await client.exists(dst + "/live");
     if (oldVersion) {
-      await client.rmdir(`${dst}/live`, true);
+      await client.rmdir(dst + "/live", true);
     }
-    await client.posixRename(`${dst}/upload`, `${dst}/live`);
+    await client.posixRename(dst + "upload", dst + "/live");
     client.end();
 
     core.info("Deploy finished");
