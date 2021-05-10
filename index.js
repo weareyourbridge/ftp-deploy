@@ -15,7 +15,7 @@ async function run() {
     };
 
     const src = core.getInput("local_folder") || "./dist";
-    const dst = "./website";
+    const dst = core.getInput("remote_folder") || "./website";
 
     await client.connect(config);
 
