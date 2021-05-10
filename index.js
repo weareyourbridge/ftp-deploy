@@ -15,7 +15,7 @@ async function run() {
     };
 
     const src = core.getInput("local_folder") || "./dist";
-    const dst = core.getInput("remote_folder") || "./website";
+    const dst = "./website";
 
     await client.connect(config);
 
@@ -23,22 +23,25 @@ async function run() {
       core.info(`Listener: Uploaded ${info.source}`);
     });
 
-    const baseFolderExists = await client.exists(dst);
-    const uploadFolderExists = await client.exists(dst + "upload");
-    core.info("Base folder exists: ", baseFolderExists);
-    core.info("Upload folder exists: ", uploadFolderExists);
+    const uploadFolderExists = await client.exists(`${dst}/upload`);
 
     if (!uploadFolderExists) {
-      await client.mkdir(dst + "upload");
+      await client.mkdir(`${dst}/upload`, true);
     }
 
-    core.info("Upload folder is: ", dst + "upload");
-    await client.uploadDir(src, dst + "upload");
-    const oldVersion = await client.exists(dst + "/live");
+    core.info(`Upload folder is: ${dst}/upload`);
+    await client.uploadDir(src, `${dst}/upload`);
+
+    const oldVersion = await client.exists(`${dst}/live`);
     if (oldVersion) {
-      await client.rmdir(dst + "/live", true);
+      await client.posixRename(`${dst}/live`, `${dst}/old`);
     }
-    await client.posixRename(dst + "upload", dst + "/live");
+
+    await client.posixRename(`${dst}/upload`, `${dst}/live`);
+
+    if (oldVersion) {
+      await client.rmdir(`${dst}/old`, true);
+    }
     client.end();
 
     core.info("Deploy finished");
